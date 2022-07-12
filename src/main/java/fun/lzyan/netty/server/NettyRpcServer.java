@@ -65,9 +65,11 @@ public class NettyRpcServer {
                             // 30 秒之内没有收到客户端的请求就关闭连接（触发一个 IdleState#READER_IDLE事件）
                             ChannelPipeline p = ch.pipeline();
                             p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));
-                            p.addLast()
+//                            p.addLast()
                         }
-                    })
+                    });
+        } catch (Exception e) {
+            
         }
 
 

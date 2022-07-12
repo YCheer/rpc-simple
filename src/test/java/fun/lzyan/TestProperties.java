@@ -1,7 +1,9 @@
 package fun.lzyan;
 
+import fun.lzyan.netty.codec.RpcConstants;
 import fun.lzyan.netty.server.NettyRpcServer;
 import fun.lzyan.utils.CuratorUtils;
+import fun.lzyan.utils.StringUtil;
 import org.junit.Test;
 
 import java.net.InetAddress;
@@ -35,5 +37,9 @@ public class TestProperties {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testMagicNumber() {
     }
 }
