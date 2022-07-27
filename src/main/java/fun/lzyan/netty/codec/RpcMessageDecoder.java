@@ -1,9 +1,14 @@
 package fun.lzyan.netty.codec;
 
+import com.sun.xml.internal.ws.developer.Serialization;
 import fun.lzyan.compress.Compress;
 import fun.lzyan.dto.RpcMessage;
+import fun.lzyan.dto.RpcRequest;
+import fun.lzyan.dto.RpcResponse;
 import fun.lzyan.enums.CompressTypeEnum;
+import fun.lzyan.enums.SerializationTypeEnum;
 import fun.lzyan.extension.ExtensionLoader;
+import fun.lzyan.serialize.Serialize;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -40,8 +45,9 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
 
     public RpcMessageDecoder() {
         // lengthFieldOffset: 魔数是4B，版本是1B，然后是全长，所以值为 magic code + version = 5 
-        // lengthFieldLength: 全长是4B，所以值为 full length = 4
-        // lengthAdjustment: full length 包括所有数据并读取前 9（magic code + version + full length） 个字节，所以左边的长度是（full Length-9），所以值为-9
+        // lengthFieldLength: full length 是4B，所以值为 full length = 4
+        // lengthAdjustment: full length 包括所有数据并读取前 9（magic code + version + full length） 个字节，所以左边的长度是（fullLength-9），所以值为-9
+        // 打个比方说，当这个 full length（消息的总长度） 的值为 0x1A（从消息中提取） 十进制的 26，而这个补偿值的意思就是 26 - （magic code + version + full length）= 17
         // initialBytesToStrip: 手动检查魔数和版本，所以不要剥离任何字节，所以值为0
         this(RpcConstants.MAX_FRAME_LENGTH, 5, 4, -9, 0);
     }
@@ -109,13 +115,23 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
             byte[] bs = new byte[bodyLength];
             // 4.读取 body 数据 
             in.readBytes(bs);
-            // 解压字节
+            // 获取解压类型，进行解压
             String compressName = CompressTypeEnum.getName(compressType);
-            ExtensionLoader.getExtensionLoader(Compress.class);
-
+            Compress compress = ExtensionLoader.getExtensionLoader(Compress.class).getExtension(compressName);
+            bs = compress.decompress(bs);
+            // 反序列化
+            String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());
+            log.info("code name :[{}]", codecName);
+            Serialize serialize = ExtensionLoader.getExtensionLoader(Serialize.class).getExtension(codecName);
+            if (messageType == RpcConstants.REQUEST_TYPE) {
+                RpcRequest tmpValue = serialize.deserialize(bs, RpcRequest.class);
+                rpcMessage.setData(tmpValue);
+            } else {
+                RpcResponse tmpValue = serialize.deserialize(bs, RpcResponse.class);
+                rpcMessage.setData(tmpValue);
+            }
         }
-
-        return null;
+        return rpcMessage;
     }
 
     /**

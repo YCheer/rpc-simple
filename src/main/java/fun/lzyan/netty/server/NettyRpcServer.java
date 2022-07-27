@@ -1,6 +1,8 @@
 package fun.lzyan.netty.server;
 
 import fun.lzyan.config.CustomShutdownHook;
+import fun.lzyan.netty.codec.RpcMessageDecoder;
+import fun.lzyan.netty.codec.RpcMessageEncoder;
 import fun.lzyan.utils.RuntimeUtil;
 import fun.lzyan.utils.threadpool.CustomThreadPoolConfig;
 import fun.lzyan.utils.threadpool.ThreadPoolFactoryUtil;
@@ -30,13 +32,12 @@ public class NettyRpcServer {
 
     public static final int PORT = 9998;
 
-
     @SneakyThrows
     public void start() {
         // 注册一个钩子，这个钩子在jvm关闭的时候就会调用，取消注册所有服务
         CustomShutdownHook.getCustomShutdownHook().clearAll();
         // 获取本机地址
-        String hostAddress = InetAddress.getLocalHost().getHostAddress();
+        String host = InetAddress.getLocalHost().getHostAddress();
 
         // Netty 服务器创建过程
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -65,13 +66,25 @@ public class NettyRpcServer {
                             // 30 秒之内没有收到客户端的请求就关闭连接（触发一个 IdleState#READER_IDLE事件）
                             ChannelPipeline p = ch.pipeline();
                             p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));
-//                            p.addLast()
+
+                            p.addLast(new RpcMessageEncoder());
+                            p.addLast(new RpcMessageDecoder());
+
+                            p.addLast(serviceHandlerGroup, new NettyRpcServerHandler());
                         }
                     });
-        } catch (Exception e) {
-            
+            // 绑定端口，同步等待绑定成功
+            ChannelFuture f = b.bind(host, PORT).sync();
+            // 等待服务端监听端口关闭
+            f.channel().closeFuture().sync();
+        } catch (InterruptedException e) {
+            log.error("occur exception when start server:", e);
+        } finally {
+            log.error("shutdown bossGroup and workerGroup");
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+            serviceHandlerGroup.shutdownGracefully();
         }
-
 
     }
 
