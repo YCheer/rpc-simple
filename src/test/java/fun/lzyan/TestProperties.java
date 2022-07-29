@@ -1,9 +1,8 @@
 package fun.lzyan;
 
-import fun.lzyan.netty.codec.RpcConstants;
-import fun.lzyan.netty.server.NettyRpcServer;
-import fun.lzyan.utils.CuratorUtils;
-import fun.lzyan.utils.StringUtil;
+import fun.lzyan.component.netty.server.NettyRpcServer;
+import fun.lzyan.component.utils.CuratorUtils;
+import fun.lzyan.component.utils.StringUtil;
 import org.junit.Test;
 
 import java.net.InetAddress;

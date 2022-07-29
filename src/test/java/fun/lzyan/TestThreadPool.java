@@ -1,10 +1,6 @@
 package fun.lzyan;
 
-import fun.lzyan.utils.threadpool.ThreadPoolFactoryUtil;
 import org.junit.Test;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author lzyan

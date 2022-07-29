@@ -1,0 +1,1 @@
+loadBalance=fun.lzyan.component.loadbalance.loadbalancer.RandomLoadBalance

@@ -1,7 +1,7 @@
 package fun.lzyan;
 
-import fun.lzyan.enums.CompressTypeEnum;
-import fun.lzyan.netty.codec.RpcConstants;
+import fun.lzyan.component.enums.CompressTypeEnum;
+import fun.lzyan.component.netty.codec.RpcConstants;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import org.junit.Test;

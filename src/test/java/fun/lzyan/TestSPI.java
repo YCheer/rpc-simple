@@ -1,8 +1,8 @@
 package fun.lzyan;
 
-import fun.lzyan.compress.Compress;
-import fun.lzyan.enums.CompressTypeEnum;
-import fun.lzyan.extension.ExtensionLoader;
+import fun.lzyan.component.compress.Compress;
+import fun.lzyan.component.enums.CompressTypeEnum;
+import fun.lzyan.component.extension.ExtensionLoader;
 import org.junit.Test;
 
 import java.io.IOException;
