@@ -27,6 +27,8 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import static fun.lzyan.component.netty.server.NettyRpcServer.REGISTER_CENTER;
+
 /**
  * @author lzyan
  * @description
@@ -61,7 +63,7 @@ public class NettyRpcClient implements RpcRequestTransport {
                         p.addLast(new NettyRpcClientHandler());
                     }
                 });
-        this.serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
+        this.serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension(REGISTER_CENTER);
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
         this.channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
     }

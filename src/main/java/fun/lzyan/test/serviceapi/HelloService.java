@@ -5,7 +5,8 @@ package fun.lzyan.test.serviceapi;
  * @description
  */
 public interface HelloService {
-    
+
     String hello(Hello hello);
 
+    String world(Hello hello);
 }

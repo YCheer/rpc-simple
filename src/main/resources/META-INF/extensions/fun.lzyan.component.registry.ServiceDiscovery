@@ -1,1 +1,2 @@
 zk=fun.lzyan.component.registry.zk.ZkServiceDiscoveryImpl
+nacos=fun.lzyan.component.registry.nacos.NacosServiceDiscovery

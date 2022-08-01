@@ -2,9 +2,11 @@ package fun.lzyan.component.netty.server;
 
 import fun.lzyan.component.config.CustomShutdownHook;
 import fun.lzyan.component.config.RpcServiceConfig;
+import fun.lzyan.component.extension.ExtensionLoader;
 import fun.lzyan.component.netty.codec.RpcMessageDecoder;
 import fun.lzyan.component.netty.codec.RpcMessageEncoder;
 import fun.lzyan.component.provider.ServiceProvider;
+import fun.lzyan.component.provider.impl.NacosServiceProviderImpl;
 import fun.lzyan.component.provider.impl.ZkServiceProviderImpl;
 import fun.lzyan.component.utils.RuntimeUtil;
 import fun.lzyan.component.utils.SingletonFactory;
@@ -35,9 +37,12 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class NettyRpcServer {
 
-    public static final int PORT = 9998;
+    public static final int PORT = 9999;
 
-    private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
+    // nacos / zk
+    public static String REGISTER_CENTER = "nacos";
+
+    private final ServiceProvider serviceProvider = ExtensionLoader.getExtensionLoader(ServiceProvider.class).getExtension(REGISTER_CENTER);
 
     public void registerService(RpcServiceConfig rpcServiceConfig) {
         serviceProvider.publicService(rpcServiceConfig);

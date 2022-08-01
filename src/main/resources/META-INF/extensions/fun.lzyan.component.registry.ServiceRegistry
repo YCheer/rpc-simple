@@ -1,1 +1,2 @@
 zk=fun.lzyan.component.registry.zk.ZkServiceRegistryImpl
+nacos=fun.lzyan.component.registry.nacos.NacosServiceRegistry

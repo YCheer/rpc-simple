@@ -1,6 +1,7 @@
 package fun.lzyan.component.provider;
 
 import fun.lzyan.component.config.RpcServiceConfig;
+import fun.lzyan.component.extension.SPI;
 
 /**
  * 
@@ -9,6 +10,7 @@ import fun.lzyan.component.config.RpcServiceConfig;
  * @author lzyan
  * @description
  */
+@SPI
 public interface ServiceProvider {
 
     

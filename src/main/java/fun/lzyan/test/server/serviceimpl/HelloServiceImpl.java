@@ -13,7 +13,15 @@ public class HelloServiceImpl implements HelloService {
     @Override
     public String hello(Hello hello) {
         log.info("HelloServiceImpl 收到:{}.", hello.getMessage());
-        String result = "Hello description is " + hello.getDescription();
+        String result = hello.getDescription();
+        log.info("HelloServiceImpl 返回:{}", result);
+        return result;
+    }
+
+    @Override
+    public String world(Hello hello) {
+        log.info("HelloServiceImpl 收到:{}", hello.getMessage());
+        String result = hello.getDescription();
         log.info("HelloServiceImpl 返回:{}", result);
         return result;
     }

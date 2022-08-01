@@ -2,12 +2,15 @@ package fun.lzyan.component.config;
 
 import fun.lzyan.component.netty.server.NettyRpcServer;
 import fun.lzyan.component.utils.CuratorUtils;
+import fun.lzyan.component.utils.NacosUtil;
 import fun.lzyan.component.utils.threadpool.ThreadPoolFactoryUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+
+import static fun.lzyan.component.netty.server.NettyRpcServer.REGISTER_CENTER;
 
 /**
  * 自定义关闭钩子
@@ -38,7 +41,11 @@ public class CustomShutdownHook {
             try {
                 // 返回封装的地址
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), NettyRpcServer.PORT);
-                CuratorUtils.clearRegistry(CuratorUtils.getZkClient(), inetSocketAddress);
+                if (REGISTER_CENTER.equals("zk")) {
+                    CuratorUtils.clearRegistry(CuratorUtils.getZkClient(), inetSocketAddress);
+                }else {
+                    NacosUtil.clearRegistry();
+                }
             } catch (UnknownHostException ignored) {
             }
             // 关闭所有 线程池

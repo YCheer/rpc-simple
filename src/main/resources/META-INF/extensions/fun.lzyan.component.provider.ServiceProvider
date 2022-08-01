@@ -1,0 +1,2 @@
+zk=fun.lzyan.component.provider.impl.ZkServiceProviderImpl
+nacos=fun.lzyan.component.provider.impl.NacosServiceProviderImpl
